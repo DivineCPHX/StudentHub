@@ -12,6 +12,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -32,8 +33,12 @@ class StudentResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema
+            // ->groups([
+            //     'college.name',
+            //     'department.name',
+            // ])
             ->components([
-                Select::make('department_id')->relationship('department', 'name')->preload(),
+                Select::make('department_id')->relationship('department', 'name')->preload()->searchable(),
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -44,7 +49,10 @@ class StudentResource extends Resource
                     ->options([
                         'male' => 'Male',
                         'female' => 'Female',
-                    ])->preload()
+                    ])->preload(),
+                TextInput::make('matric_no')->label('Matric No.'),
+                Toggle::make('is_graduated')->label('Graduated'),
+
             ]);
     }
 
@@ -61,17 +69,25 @@ class StudentResource extends Resource
         return $table
             ->recordTitleAttribute('name')
             ->columns([
+                TextColumn::make('department.name')
+                    ->searchable(),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('email')
                     ->searchable(),
-                TextColumn::make('gender')
+                TextColumn::make('gender'),
+                TextColumn::make('matric_no')->label('Matric No.'),
+                TextColumn::make('is_graduated')->label('Graduated'),
             ])
             ->filters([
                 SelectFilter::make('gender')
                     ->options([
                         'male' => 'Male',
                         'female' => 'Female',
+                    ]),
+                Filter::make('department')
+                    ->schema([
+                        TextInput::make('department.name')
                     ]),
             ])
             ->recordActions([

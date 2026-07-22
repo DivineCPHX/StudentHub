@@ -12,6 +12,8 @@ class Students extends Model
         'name',
         'email',
         'gender',
+        'matric_no',
+        'is_graduated'
     ];
 
     public function department()

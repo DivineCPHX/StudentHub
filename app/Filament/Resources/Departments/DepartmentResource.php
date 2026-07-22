@@ -10,19 +10,22 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class DepartmentResource extends Resource
 {
     protected static ?string $model = Departments::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::BuildingOffice2;
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -30,9 +33,10 @@ class DepartmentResource extends Resource
     {
         return $schema
             ->components([
+                Select::make('college_id')->relationship('college', 'name')->preload()->searchable(),
                 TextInput::make('name')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(70),
             ]);
     }
 
@@ -49,11 +53,15 @@ class DepartmentResource extends Resource
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                TextColumn::make('name')
-                    ->searchable(),
+                TextColumn::make('college.name')->searchable()->sortable(),
+                TextColumn::make('name')->label('Department')
+                    ->searchable()->sortable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('college')->label('College')
+                    ->relationship('college', 'name')
+                    ->preload(),
+                // Filter::make('department')->label('Department'),
             ])
             ->recordActions([
                 ViewAction::make(),
