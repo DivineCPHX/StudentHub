@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Departments;
 
 use App\Filament\Resources\Departments\Pages\ManageDepartments;
-use App\Models\Department;
+use App\Models\Departments;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -20,7 +20,7 @@ use Filament\Tables\Table;
 
 class DepartmentResource extends Resource
 {
-    protected static ?string $model = Department::class;
+    protected static ?string $model = Departments::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 

@@ -3,13 +3,14 @@
 namespace App\Filament\Resources\Students;
 
 use App\Filament\Resources\Students\Pages\ManageStudents;
-use App\Models\Student;
+use App\Models\Students;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
@@ -20,7 +21,7 @@ use Filament\Tables\Table;
 
 class StudentResource extends Resource
 {
-    protected static ?string $model = Student::class;
+    protected static ?string $model = Students::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
@@ -30,9 +31,14 @@ class StudentResource extends Resource
     {
         return $schema
             ->components([
+                Select::make('department_id')->relationship('department', 'name'),
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255),
+                TextInput::make('email')
+                    ->required()
+                    ->email(),
+                TextInput::make('gender'),
             ]);
     }
 
@@ -51,6 +57,9 @@ class StudentResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
+                TextColumn::make('email')
+                    ->searchable(),
+                TextColumn::make('gender')
             ])
             ->filters([
                 //
