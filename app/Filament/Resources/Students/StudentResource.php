@@ -17,13 +17,15 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class StudentResource extends Resource
 {
     protected static ?string $model = Students::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -31,14 +33,18 @@ class StudentResource extends Resource
     {
         return $schema
             ->components([
-                Select::make('department_id')->relationship('department', 'name'),
+                Select::make('department_id')->relationship('department', 'name')->preload(),
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255),
                 TextInput::make('email')
                     ->required()
                     ->email(),
-                TextInput::make('gender'),
+                Select::make('gender')
+                    ->options([
+                        'male' => 'Male',
+                        'female' => 'Female',
+                    ])->preload()
             ]);
     }
 
@@ -62,7 +68,11 @@ class StudentResource extends Resource
                 TextColumn::make('gender')
             ])
             ->filters([
-                //
+                SelectFilter::make('gender')
+                    ->options([
+                        'male' => 'Male',
+                        'female' => 'Female',
+                    ]),
             ])
             ->recordActions([
                 ViewAction::make(),
