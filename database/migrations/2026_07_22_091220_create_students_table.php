@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('email');
             $table->string('gender');
             $table->string('matric_no');
-            $table->string('is_graduated');
+            $table->boolean('is_graduated');
+            $table->integer('level');
             $table->timestamps();
         });
     }

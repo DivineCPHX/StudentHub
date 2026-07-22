@@ -15,7 +15,7 @@ class CollegesTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable(),
+                TextColumn::make('name'),
             ])
             ->filters([
                 //

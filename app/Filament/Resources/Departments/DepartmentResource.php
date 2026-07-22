@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Departments;
 
 use App\Filament\Resources\Departments\Pages\ManageDepartments;
+use App\Models\Colleges;
 use App\Models\Departments;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
@@ -10,6 +11,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
@@ -33,7 +35,9 @@ class DepartmentResource extends Resource
     {
         return $schema
             ->components([
-                Select::make('college_id')->relationship('college', 'name')->preload()->searchable(),
+                Hidden::make('college_id')
+                    ->default(1)
+                    ->live(),
                 TextInput::make('name')
                     ->required()
                     ->maxLength(70),
@@ -53,7 +57,6 @@ class DepartmentResource extends Resource
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                TextColumn::make('college.name')->searchable()->sortable(),
                 TextColumn::make('name')->label('Department')
                     ->searchable()->sortable(),
             ])
