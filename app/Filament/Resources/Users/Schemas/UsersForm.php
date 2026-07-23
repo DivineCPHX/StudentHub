@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Users\Schemas;
 
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -29,7 +30,9 @@ class UsersForm
                 TextInput::make('password')
                     ->password()
                     ->required(),
-                TextInput::make('photo')
+                FileUpload::make('photo')
+                    ->disk('public')
+                    ->directory('users')
                     ->default(null),
             ]);
     }
