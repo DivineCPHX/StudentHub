@@ -14,11 +14,10 @@ class UsersForm
         return $schema
             ->components([
                 Select::make('role_id')->label('Role ID')
-                    ->options([
-                        'Super Admin' => 'supadm',
-                        'Admin' => 'adm',
-                        'Staff' => 'stf'
-                    ])
+                    ->relationship('role', 'name')
+                    ->required()
+                    ->searchable()
+                    ->preload()
                     ->default(null),
                 TextInput::make('name')
                     ->required(),
