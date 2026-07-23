@@ -26,6 +26,7 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 
 class StudentResource extends Resource
@@ -39,10 +40,6 @@ class StudentResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema
-            // ->groups([
-            //     'college.name',
-            //     'department.name',
-            // ])
             ->components([
                 Select::make('department_id')->relationship('department', 'name')->preload()->searchable(),
                 TextInput::make('name')
@@ -53,8 +50,8 @@ class StudentResource extends Resource
                     ->email(),
                 Select::make('gender')
                     ->options([
-                        'male' => 'Male',
-                        'female' => 'Female',
+                        'Male' => 'male',
+                        'Female' => 'female',
                     ])->preload(),
                 TextInput::make('matric_no')->label('Matric No.'),
                 Select::make('level')->label('Level')
@@ -81,6 +78,14 @@ class StudentResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->persistColumnSearchesInSession()
+            ->persistFiltersInSession()
+            ->persistSortInSession()
+            ->deferLoading()
+            ->deferFilters()
+            ->groups([
+                Group::make('department.name'),
+            ])
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('department.name')
@@ -90,15 +95,15 @@ class StudentResource extends Resource
                 TextColumn::make('email')
                     ->searchable(),
                 TextColumn::make('gender'),
-                TextColumn::make('matric_no')->label('Matric No.'),
+                TextColumn::make('matric_no')->label('Matric No.')->searchable(),
                 IconColumn::make('is_graduated')->label('Graduated')->boolean(),
-                TextColumn::make('level')->label('Level'),
+                TextColumn::make('level')->label('Level')->sortable(),
             ])
             ->filters([
                 SelectFilter::make('gender')
                     ->options([
-                        'male' => 'Male',
-                        'female' => 'Female',
+                        'Male' => 'male',
+                        'Female' => 'female',
                     ]),
                 SelectFilter::make('department_id')
                     ->label('Department')
@@ -117,7 +122,7 @@ class StudentResource extends Resource
                 ViewAction::make(),
                 EditAction::make(),
                 Action::make('promote')
-                    ->label('Promote Student')
+                    ->label('Promote')
                     ->icon(Heroicon::ArrowUp)
                     ->color('success')
                     ->requiresConfirmation()
@@ -140,7 +145,7 @@ class StudentResource extends Resource
                             ->send();
                     }),
                     Action::make('demote')
-                    ->label('Demote Student')
+                    ->label('Demote')
                     ->icon(Heroicon::ArrowDown)
                     ->color('warning')
                     ->requiresConfirmation()
