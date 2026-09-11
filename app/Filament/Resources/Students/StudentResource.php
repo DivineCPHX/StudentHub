@@ -33,7 +33,7 @@ class StudentResource extends Resource
 {
     protected static ?string $model = Students::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::Outlined s;
 
     protected static ?string $recordTitleAttribute = 'name';
 
